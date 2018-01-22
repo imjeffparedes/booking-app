@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html class="with-statusbar">
+<head>
+  <meta charset="utf-8">
+  <!--
+  Customize this policy to fit your own app's needs. For more guidance, see:
+      https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+  Some notes:
+      * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+      * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+      * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+          * Enable inline JS: add 'unsafe-inline' to default-src
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#2196f3">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <title id="app-title">eBook mo na si Doc</title>
+
+  <link rel="stylesheet" href="lib/framework7/css/framework7.min.css">
+  <link rel="stylesheet" href="lib/framework7/css/framework7-icons.css">
+  <link rel="stylesheet" href="lib/material-design/css/icons.css">
+  <link rel="stylesheet" href="css/app.css">
+  <style type="text/css">
+   
+
+  </style>
+</head>
+<body>
+
+   <!-- App root element -->
+    <div id="app">
+      <div class="md-only  bg-color-blue"></div>
+
+
+      <!-- Statusbar overlay -->
+      <div class="statusbar"></div>
+    <!-- Status bar overlay for full screen mode (PhoneGap) -->
+    <div class="statusbar-overlay"></div>
+
+
+    <!-- Views/Tabs container -->
+    <div class="views tabs ios-edges ">
+      <!-- Tabbar for switching views-tabs
+       -->
+      <div class="toolbar tabbar-labels toolbar-bottom-md hidden-toolbar " >
+        <div class="toolbar-inner">
+          <a href="#view-home" class="tab-link tab-link-active">
+            <i class="icon f7-icons ios-only">home</i>
+            <i class="icon material-icons md-only">home</i>
+            <span class="tabbar-label">Home</span>
+          </a>
+          <a href="#view-booking" id="tab-booking" class="tab-link">
+            <i class="icon f7-icons ios-only">bookmark</i>
+            <i class="icon material-icons md-only">bookmark</i>
+            <span class="tabbar-label">Booking</span>
+          </a>
+          <a href="#view-settings" class="tab-link">
+            <i class="icon f7-icons ios-only">settings</i>
+            <i class="icon material-icons md-only">settings</i>
+            <span class="tabbar-label">Settings</span>
+          </a>
+        </div>
+      </div>
+      <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
+      <div id="view-home" class="view view-main tab tab-active ">
+        <!-- Page, data-name contains page name which can be used in page callbacks -->
+        <div class="page" data-name="home">
+          <!-- Top Navbar -->
+          <div class="navbar">
+            <div class="navbar-inner">
+
+              <div class="title sliding">Home</div>
+              <div class="right">
+                <a href="#" class="link icon-only panel-open" data-panel="right">
+                  <i class="icon f7-icons ios-only">more_vert</i>
+                  <i class="icon material-icons md-only">more_vert</i>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scrollable page content-->
+          <div class="page-content">
+            <!-- hide-on-search element -->
+
+
+            <div class="block inset center" >
+                  <img id="org-image" src="img/img-loading.gif" width="60%" style="margin: 10px;">
+                <h2  id="org-name"></h2>
+                <b>Booking App Version 1.0</b>
+              <p id="org-description" >Loading ...</p>
+            </div>
+
+            <div class="block inset center" >
+            
+              <p> 
+                <i class="icon material-icons md-only">place</i>
+                <i class="icon f7-icons ios-only">navigation</i> 
+                <span id="org-address" >...</span>
+              </p>
+
+              <p> <i class="icon material-icons md-only">phone</i> 
+                <i class="icon f7-icons ios-only">phone</i>
+                 <span id="org-contact" >...</span>
+               </p>
+              <p> <i class="icon material-icons md-only">mail</i>
+                <i class="icon f7-icons ios-only">email</i> 
+                 <span id="org-email" >...</span>
+               </p>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Catalog View -->
+      <div id="view-home" class="view tab">
+        <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
+      </div>
+
+      <!-- Settings View -->
+      <div id="view-booking" class="view tab">
+        <!-- Settings page will be loaded here dynamically from /settings/ route -->
+      </div>
+      <!-- Settings View -->
+      <div id="view-settings" class="view tab">
+        <!-- Settings page will be loaded here dynamically from /settings/ route -->
+      </div>
+    </div>
+
+
+    </div>
+  <!-- Cordova -->
+  <script src="cordova.js"></script>
+  
+
+  <!-- Framework7 library -->
+  <script src="lib/framework7/js/framework7.js"></script>
+
+  <!-- App routes -->
+  <script src="js/routes.js"></script>
+
+  <!-- Path to your custom app scripts -->
+  <script src="js/app.js"></script>
+</body>
+</html>
