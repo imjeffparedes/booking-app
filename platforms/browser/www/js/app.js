@@ -62,7 +62,7 @@ var ticket_option = app.actions.create({
       onClick: function () {
          app.dialog.confirm('Hold this ticket?', function () {
            
-            app.request.get('http://192.168.2.150:8084/v1/ticket/hold/1', function (data) {
+            app.request.get('http://localhost:8084/v1/ticket/hold/1', function (data) {
               console.log(data);
 
               var obj = JSON.parse(data);
@@ -78,7 +78,7 @@ var ticket_option = app.actions.create({
       text: 'Cancel',
       onClick: function () {
          app.dialog.confirm('Cancel this ticket?', function () {
-            app.request.get('http://192.168.2.150:8084/v1/ticket/cancel/1', function (data) {
+            app.request.get('http://localhost:8084/v1/ticket/cancel/1', function (data) {
               console.log(data);
               if(obj>=1)
                app.dialog.alert('Ticket Canceled!');
@@ -109,7 +109,7 @@ $$(document).on('click', '.btn-ticket-option', function () {
 $$(document).on('page:init', '.page[data-name="home"]', function (e) {
   
 
-  app.request.get('http://192.168.2.150:8084/v1/organization/6', function (data) {
+  app.request.get('http://localhost:8084/v1/organization/6', function (data) {
    console.log(data)
     var obj = JSON.parse(data);
     if(Object.keys(obj.data)<0){
@@ -139,7 +139,7 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
   var params = e.detail.route.params;
 
 
-  app.request.get('http://192.168.2.150:8084/v1/queue/'+params.id, function (data) {
+  app.request.get('http://localhost:8084/v1/queue/'+params.id, function (data) {
    
     var obj = JSON.parse(data);
 
@@ -188,7 +188,7 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
       app.dialog.confirm('Are you sure you want to book ' + name + '?', function () {
 
         app.dialog.preloader();
-        app.request.post('http://192.168.2.150:8084/v1/ticket/create', {
+        app.request.post('http://localhost:8084/v1/ticket/create', {
                         queue_id:params.id,
                         metadata:[{
                             name:"name",
@@ -217,7 +217,7 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 
 $$(document).on('click', '#tab-booking', function (e) {
 
-  app.request.post('http://192.168.2.150:8084/v1/queue/', {organizationId:6}, function (data) {
+  app.request.post('http://localhost:8084/v1/queue/', {organizationId:6}, function (data) {
    
     var obj = JSON.parse(data);
 
@@ -261,7 +261,7 @@ var refreshQueue = function(id){
     $$('#serving-content').html('<div class=" preloader"></div>');
 
   //get currently serving tickets
- app.request.post('http://192.168.2.150:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
+ app.request.post('http://localhost:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
    
     var obj = JSON.parse(data);
     if(Object.keys(obj.data)<0){
@@ -287,7 +287,7 @@ var refreshQueue = function(id){
     $$('#inline-content').html('<div class=" preloader"></div>');
 
   //get next inline tickets
-  app.request.get('http://192.168.2.150:8084/v1/ticket/'+id, function (data) {
+  app.request.get('http://localhost:8084/v1/ticket/'+id, function (data) {
    
     var obj = JSON.parse(data);
 
