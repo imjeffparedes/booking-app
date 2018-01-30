@@ -17,7 +17,7 @@
   <meta name="theme-color" content="#2196f3">
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
-  <title id="app-title">eBook mo na si Doc</title>
+  <title id="app-title">Booking App</title>
 
   <link rel="stylesheet" href="lib/framework7/css/framework7.min.css">
   <link rel="stylesheet" href="lib/framework7/css/framework7-icons.css">
@@ -79,6 +79,7 @@
                   <i class="icon material-icons md-only">more_vert</i>
                 </a>
               </div>
+
             </div>
           </div>
 
@@ -86,40 +87,55 @@
           <div class="page-content">
             <!-- hide-on-search element -->
 
+            <div class="block">
+              <div class="card">
+                  <div class="card-header">Search for Centers/Hospitals</div>
+                  <div class="card-content card-content-padding">
+                      <!-- Card content -->
+                      
+                      <p class="">
+                      Look for Centers / Hospitals that offers doctors or specialist for your medical appointment.</p>
 
-            <div class="block inset center" >
-                  <img id="org-image" src="img/img-loading.gif" width="60%" style="margin: 10px;">
-                <h2  id="org-name"></h2>
-                <b>Booking App Version 1.0</b>
-              <p id="org-description" >Loading ...</p>
+                      <a href="/search-organization/"><button class="button" >SEARCH</button></a>
+                  </div>
+              </div>
             </div>
 
-            <div class="block inset center" >
-            
-              <p> 
-                <i class="icon material-icons md-only">place</i>
-                <i class="icon f7-icons ios-only">navigation</i> 
-                <span id="org-address" >...</span>
-              </p>
+            <div class="block-title">Recent Appointments</div>
+            <div class="block">
+              <div class="list">
+                <ul>
+                  <li>
+                    <a href="#" class="item-link item-content" >
+                      <div class="item-media"><img src="" width="44"/></div>
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <div class="item-title">Title</div>
+                        </div>
+                        <div class="item-subtitle">Descriptions </div>
+                      </div>
+                    </a>
+                  </li>
 
-              <p> <i class="icon material-icons md-only">phone</i> 
-                <i class="icon f7-icons ios-only">phone</i>
-                 <span id="org-contact" >...</span>
-               </p>
-              <p> <i class="icon material-icons md-only">mail</i>
-                <i class="icon f7-icons ios-only">email</i> 
-                 <span id="org-email" >...</span>
-               </p>
+                  <li>
+                    <a href="#" class="item-link item-content" >
+                      <div class="item-media"><img src="" width="44"/></div>
+                      <div class="item-inner">
+                        <div class="item-title-row">
+                          <div class="item-title">Title</div>
+                        </div>
+                        <div class="item-subtitle">Descriptions </div>
+                      </div>
+                    </a>
+                  </li>
+
+                </ul>
+              </div>
             </div>
 
 
           </div>
         </div>
-      </div>
-
-      <!-- Catalog View -->
-      <div id="view-home" class="view tab">
-        <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
       </div>
 
       <!-- Settings View -->

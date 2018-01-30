@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html class="with-statusbar">
+<head>
+  <meta charset="utf-8">
+  <!--
+  Customize this policy to fit your own app's needs. For more guidance, see:
+      https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+  Some notes:
+      * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+      * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+      * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+          * Enable inline JS: add 'unsafe-inline' to default-src
+  -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#2196f3">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="msapplication-tap-highlight" content="no">
+  <title>Booking App</title>
+
+  <link rel="stylesheet" href="lib/framework7/css/framework7.min.css">
+  <link rel="stylesheet" href="css/icons.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+   <!-- App root element -->
+  <div id="app">
+    <!-- Statusbar overlay -->
+    <div class="statusbar"></div>
+
+    <!-- Your main view, should have "view-main" class -->
+    <div class="view view-main">
+     
+     <div class="page">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="title">Welcome</div>
+          </div>
+        </div>
+        <div class="page-content">
+          <div class="block-title">No gap between columns</div>
+          <div class="block">
+            <div class="row no-gap">
+              <div class="col">50% (.col)</div>
+              <div class="col">50% (.col)</div>
+            </div>
+            <div class="row no-gap">
+              <div class="col">25% (.col)</div>
+              <div class="col">25% (.col)</div>
+              <div class="col">25% (.col)</div>
+              <div class="col">25% (.col)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Cordova -->
+  <script src="cordova.js"></script>
+  
+  <!-- Framework7 library -->
+  <script src="lib/framework7/js/framework7.js"></script>
+
+  <!-- App routes -->
+  <script src="js/routes.js"></script>
+
+  <!-- Path to your custom app scripts -->
+  <script src="js/app.js"></script>
+</body>
+</html>

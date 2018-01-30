@@ -41,16 +41,382 @@ var settingsView = app.views.create('#view-settings', {
 });
 
 
-// create searchbar
-var searchbar = app.searchbar.create({
-  el: '.searchbar',
-  searchContainer: '.list',
-  searchIn: '.item-title',
-  on: {
-    search(sb, query, previousQuery) {
-      console.log(query, previousQuery);
-    }
+
+// Option 1. Using one 'page:init' handler for all pages
+$$(document).on('page:init', function (e) {
+  // Do something here when page loaded and initialized
+  var page =e.detail;
+  console.log(page.name+' initialized' );
+  var params = e.detail.route.params;
+  var container = page.$el;
+
+  if(page.name == 'organization'){
+    console.log(params)
+
+    container.find('#lnk-search-specialist').attr({href: '/booking/'+params.id});
+
+    //get organization info
+    app.request.get('http://192.168.2.150:8084/v1/organization/'+params.id, function (data) {
+     
+      var obj = JSON.parse(data);
+
+      console.log(obj)
+      if(obj.data == null || Object.keys(obj.data)<=0){
+        return;
+      }
+      localStorage.orgName = obj.data.name;
+      container.find('#organization-name').html(obj.data.name);
+      container.find('#organization-image').attr({src:obj.data.image});
+      container.find('#organization-address').html(obj.data.address);
+      container.find('#organization-contact').html(obj.data.contact);
+      container.find('#organization-title').html(obj.data.name);
+      container.find('#organization-email').html(obj.data.email);
+
+
+      if(obj.data.contact==null || obj.data.contact.length<=0)
+        container.find('#organization-contact-content').hide();
+
+      if(obj.data.contact==null || obj.data.email.length<=0)
+        container.find('#organization-email-content').hide();
+
+      container.find('#organization-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
+      container.find('#organization-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
+      
+      function toggleDesc() {
+         var short = document.getElementById("organization-description-small");
+          var long = document.getElementById("organization-description");
+          if (short.style.display === "none") {
+            long.style.display = "none";
+            short.style.display = "block";
+          }else{
+            short.style.display = "none";
+            long.style.display = "block";
+          }
+      }
+
+      $$('#desc-see-more').on('click',function(e){
+        toggleDesc()
+      })
+
+      $$('#desc-see-less').on('click',function(e){
+        toggleDesc()
+      })  
+    }) // end of ajax request
+
   }
+  else if(page.name == 'search-organization'){
+
+    app.request.get('http://192.168.2.150:8084/v1/organization/all', function (data) {
+     
+      var obj = JSON.parse(data);
+      console.log(obj)
+      if(Object.keys(obj.data)<=0){
+        $$('#org-search-result-content').html('<p class="text-align-center">Search not found</p>');
+        return;
+      }
+
+      //set data on list
+      var list='<ul>';
+
+      //iterate data list
+      obj.data.forEach(function(val, index) {
+         list+='<li><a href="/organization/'+val.id+'" class="item-link item-content" id="link-org-'+val.id+'">';
+              list+='<div class="item-media"><img src="'+val.image+'" width="44"/></div>';
+              list+='<div class="item-inner">';
+                list+='<div class="item-title-row">';
+                  list+='<div class="item-title">'+val.name+'</div>';
+                list+='</div>';
+                list+='<div class="item-subtitle">'+val.description+'</div>';
+              list+='</div>';
+            list+='</a></li>';
+
+            $$(document).on('click','#link-org-'+val.id, function () {
+              localStorage.orgId = val.id;
+              
+              
+            });
+      });
+
+      list+='</ul>';
+
+      $$('#org-search-result-content').html(list);
+
+      // create searchbar
+      var searchbar = app.searchbar.create({
+        el: '.searchbar',
+        searchContainer: '.list',
+        searchIn: '.item-title',
+        on: {
+          search(sb, query, previousQuery) {
+            console.log(query, previousQuery);
+          }
+        }
+      });
+
+
+    }); // end of ajax request
+
+  }
+  else if(page.name == 'home'){
+    app.request.get('http://192.168.2.150:8084/v1/organization/6', function (data) {
+     console.log(data)
+      var obj = JSON.parse(data);
+      if(Object.keys(obj.data)<0){
+        return;
+      }
+
+      container.find('#app-title').html(obj.data.name);
+      container.find('#org-name').html(obj.data.name);
+      container.find('#org-description').html(obj.data.description);
+      container.find('#org-image').attr({src:obj.data.image});
+      container.find('#org-address').html(obj.data.address);
+      container.find('#org-contact').html(obj.data.contact);
+      container.find('#org-email').html(obj.data.email);
+
+    }); // end of ajax request
+
+  }else if(page.name == 'about'){
+    app.request.get('http://192.168.2.150:8084/v1/specialist/'+params.id, function (data) {
+     
+      var obj = JSON.parse(data);
+
+      console.log(obj)
+      if(Object.keys(obj.data)<=0){
+        return;
+      }
+      container.find('#specialist-name').html(obj.data.name);
+      container.find('#specialist-image').attr({src:obj.data.image});
+      container.find('#specialist-address').html(obj.data.address);
+      container.find('#specialist-contact').html(obj.data.contact);
+      container.find('#specialist-title').html(obj.data.name);
+
+      container.find('#specialist-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
+      container.find('#specialist-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
+      
+      var specializations = "";
+
+
+      obj.data.specialization.split(', ').forEach(function(val, index) {
+        specializations+='<div class="chip"><div class="chip-label">'+val+'</div></div>';
+      })
+      container.find('#specialist-specialization').html(specializations);
+
+      function toggleDesc() {
+         var short = document.getElementById("specialist-description-small");
+          var long = document.getElementById("specialist-description");
+          if (short.style.display === "none") {
+            long.style.display = "none";
+            short.style.display = "block";
+          }else{
+            short.style.display = "none";
+            long.style.display = "block";
+          }
+      }
+
+      container.find('#desc-see-more').on('click',function(e){
+        toggleDesc()
+      })
+
+      container.find('#desc-see-less').on('click',function(e){
+        toggleDesc()
+      })
+      
+
+    }); // end of ajax request
+
+     app.request.post('http://192.168.2.150:8084/v1/queue/', {specialistId:params.id}, function (data) { 
+      var obj = JSON.parse(data);
+      console.log(obj)
+      if(Object.keys(obj.data)<=0){
+        container.find('#schedule-content').html('<p class="text-align-center">No schedule found</p>');
+        return;
+      }
+
+      container.find('#page-title').html(localStorage.specialistName);
+
+      //set data on list
+      var list='';
+
+      //iterate data list
+      obj.data.forEach(function(val, index) {
+        list+='<li><a href="/line/'+val.id+'" id="#schedule-'+val.id+'">'+val.name+'</a></li>';
+      });
+      container.find('#schedule-content').html(list);
+    }); //end of ajax request
+     
+  }else if(page.name == 'booking'){
+  
+
+    app.request.post('http://192.168.2.150:8084/v1/specialist/', {organizationId:params.id}, function (data) { 
+      var obj = JSON.parse(data);
+      console.log(obj)
+      if(Object.keys(obj.data)<=0){
+
+        container.find('#specialist-content').html('<p class="text-align-center">No specialist found</p>');
+        return;
+      }
+
+      container.find('#page-title').html(localStorage.orgName);
+
+      //set data on list
+      var list='<div class = "list"><ul>';
+
+      //iterate data list
+      obj.data.forEach(function(val, index) {
+         list+='<li><a href="/about/'+val.id+'" class="item-link item-content" id="link-specialist-'+val.id+'">';
+              list+='<div class="item-media"><img src="'+val.image+'" width="44"/></div>';
+              list+='<div class="item-inner">';
+                list+='<div class="item-title-row">';
+                  list+='<div class="item-title">'+val.name+'</div>';
+                list+='</div>';
+                list+='<div class="item-subtitle">'+val.description+'</div>';
+              list+='</div>';
+            list+='</a></li>';
+
+            $$(document).on('click','#link-specialist-'+val.id, function () {
+              localStorage.specialistId = val.id;
+              localStorage.specialistName = val.name;
+            });
+      });
+
+      list+='</ul></div>';
+
+      container.find('#specialist-content').html(list);
+
+      // create searchbar
+      var searchbar = app.searchbar.create({
+        el: '.searchbar',
+        searchContainer: '.list',
+        searchIn: '.item-title',
+        on: {
+          search(sb, query, previousQuery) {
+            console.log(query, previousQuery);
+          }
+        }
+      });
+
+
+    });
+  }
+  else if(page.name == 'schedule'){
+    app.request.post('http://192.168.2.150:8084/v1/queue/', {specialistId:params.id}, function (data) { 
+      var obj = JSON.parse(data);
+      console.log(obj)
+      if(Object.keys(obj.data)<=0){
+        container.find('#schedule-content').html('<p class="text-align-center">No schedule found</p>');
+        return;
+      }
+
+      container.find('#page-title').html(localStorage.specialistName);
+
+      //set data on list
+      var list='';
+
+      //iterate data list
+      obj.data.forEach(function(val, index) {
+        list+='<li><a href="#" id="#schedule-'+val.id+'">'+val.name+'</a></li>';
+           // Prompt
+        
+
+      });
+      container.find('#schedule-content').html(list);
+
+
+    });
+  }
+  else if(page.name == 'line'){
+
+      container.find('#btn-book-ticket').on('click', function () {
+        app.dialog.prompt('What is your full name?', function (name) {
+          app.dialog.prompt('What is your mobile number ' + name + '?', function (mobile) {
+
+            app.dialog.preloader();
+            app.request.post('http://192.168.2.150:8084/v1/ticket/create', {
+                            queue_id:params.id,
+                            name:name,
+                            mobile:mobile,
+                            metadata:[]
+                          }
+              ,function (data) {
+             
+              var obj = JSON.parse(data);
+
+              app.dialog.alert('Thanks '+name+', your ticket number is N0' + obj.ticketId+'<br>Will text you when you are next in line.');
+              refreshQueue(params.id);
+               app.dialog.close();
+            
+            });
+
+          });
+        });
+      });
+
+    var refreshQueue = function(id){
+
+
+        container.find('#serving-content').html('<div class=" preloader"></div>');
+
+        //get currently serving tickets
+       app.request.post('http://192.168.2.150:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
+         
+          var obj = JSON.parse(data);
+          console.log(obj)
+          if(Object.keys(obj.data)<=0){
+            $$('#serving-content').html('<p class="color-gray">--- Nothing in here ---</p>');
+            return;
+          }
+
+          //set data on list
+          var items='';
+
+          //iterate data list
+          obj.data.forEach(function(val, index) {
+              //set data on list
+            items+=' <div class = "card"><div class = "card-content"><div class = "row">';
+            items+='<div class = "col-33"><b>N0'+val.id+'</b></div>';
+            items+='<div class = "col-33">'+val.name+'</div>'; 
+            items+='<div class = "col-33">'+val.description+'</div>'; 
+            items+='</div></div></div>';         
+          });
+          $$('#serving-content').html(items);
+        });
+
+
+      container.find('#inline-content').html('<div class=" preloader"></div>');
+
+      //get next inline tickets
+      app.request.post('http://192.168.2.150:8084/v1/ticket/'+id, {status:'PENDING'}, function (data) {
+       
+        var obj = JSON.parse(data);
+
+        if(Object.keys(obj.data)<0){
+
+          container.find('#inline-content').html('<p>--- Nothing in here ---</p>');
+          return;
+        }
+
+        //set data on list
+        var items='';
+
+        //iterate data list
+        obj.data.forEach(function(val, index) {
+            //set data on list
+          items+=' <div class = "card"><div class = "card-content"><div class = "row">';
+          items+='<div class = "col-33"><b>N0'+val.id+'</b></div>';
+            items+='<div class = "col-33">'+val.name+'</div>'; 
+          items+='<div class = "col-33">'+val.created+'</div>'; 
+          items+='</div></div></div>';         
+        });
+
+
+        container.find('#inline-content').html(items);
+      });
+    };
+
+
+    refreshQueue(params.id);
+  }
+
 });
 
 
@@ -62,7 +428,7 @@ var ticket_option = app.actions.create({
       onClick: function () {
          app.dialog.confirm('Hold this ticket?', function () {
            
-            app.request.get('http://localhost:8084/v1/ticket/hold/1', function (data) {
+            app.request.get('http://192.168.2.150:8084/v1/ticket/hold/1', function (data) {
               console.log(data);
 
               var obj = JSON.parse(data);
@@ -78,7 +444,7 @@ var ticket_option = app.actions.create({
       text: 'Cancel',
       onClick: function () {
          app.dialog.confirm('Cancel this ticket?', function () {
-            app.request.get('http://localhost:8084/v1/ticket/cancel/1', function (data) {
+            app.request.get('http://192.168.2.150:8084/v1/ticket/cancel/1', function (data) {
               console.log(data);
               if(obj>=1)
                app.dialog.alert('Ticket Canceled!');
@@ -109,24 +475,6 @@ $$(document).on('click', '.btn-ticket-option', function () {
 $$(document).on('page:init', '.page[data-name="home"]', function (e) {
   
 
-  app.request.get('http://localhost:8084/v1/organization/6', function (data) {
-   console.log(data)
-    var obj = JSON.parse(data);
-    if(Object.keys(obj.data)<0){
-      return;
-    }
-
-    $$('.page[data-name="settings"]').find('#app-title').html(obj.data.name);
-    $$('.page[data-name="home"]').find('#app-title').html(obj.data.name);
-    $$('.page[data-name="home"]').find('#org-name').html(obj.data.name);
-    $$('.page[data-name="home"]').find('#org-description').html(obj.data.description);
-    $$('.page[data-name="home"]').find('#org-image').attr({src:obj.data.image});
-    $$('.page[data-name="home"]').find('#org-address').html(obj.data.address);
-    $$('.page[data-name="home"]').find('#org-contact').html(obj.data.contact);
-    $$('.page[data-name="home"]').find('#org-email').html(obj.data.email);
-
-  });
-
 });
 
 
@@ -135,89 +483,12 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
 $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 
 
-  
-  var params = e.detail.route.params;
-
-
-  app.request.get('http://localhost:8084/v1/queue/'+params.id, function (data) {
-   
-    var obj = JSON.parse(data);
-
-    console.log(obj)
-    if(Object.keys(obj.data)<=0){
-      return;
-    }
-     var page = $$('.page[data-name="about"]');
-    page.find('#specialist-name').html(obj.data.name);
-    page.find('#specialist-image').attr({src:obj.data.image});
-    page.find('#specialist-address').html(obj.data.address);
-    page.find('#specialist-contact').html(obj.data.contact);
-    page.find('#specialist-title').html(obj.data.name);
-
-    page.find('#specialist-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
-    page.find('#specialist-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
-    
-    function toggleDesc() {
-       var short = document.getElementById("specialist-description-small");
-        var long = document.getElementById("specialist-description");
-        if (short.style.display === "none") {
-          long.style.display = "none";
-          short.style.display = "block";
-        }else{
-          short.style.display = "none";
-          long.style.display = "block";
-        }
-    }
-
-    $$('#desc-see-more').on('click',function(e){
-      toggleDesc()
-    })
-
-    $$('#desc-see-less').on('click',function(e){
-      toggleDesc()
-    })
-    
-
-  });
-
-  var container =  $$('.page[data-name="about"]');
-
-  // Prompt
-  container.find('.btn-book-ticket').on('click', function () {
-    app.dialog.prompt('What is your name?', function (name) {
-      app.dialog.confirm('Are you sure you want to book ' + name + '?', function () {
-
-        app.dialog.preloader();
-        app.request.post('http://localhost:8084/v1/ticket/create', {
-                        queue_id:params.id,
-                        metadata:[{
-                            name:"name",
-                            value:name
-                          }]}
-          ,function (data) {
-         
-          var obj = JSON.parse(data);
-
-          app.dialog.alert('Ok '+name+', your ticket number is N0' + obj.ticketId);
-          refreshQueue(params.id);
-           app.dialog.close();
-        
-        });
-
-      });
-    });
-  });
-
-
-  
-   refreshQueue(params.id);
-   
 
 });
 
 $$(document).on('click', '#tab-booking', function (e) {
 
-  app.request.post('http://localhost:8084/v1/queue/', {organizationId:6}, function (data) {
+  app.request.post('http://192.168.2.150:8084/v1/queue/', {organizationId:6}, function (data) {
    
     var obj = JSON.parse(data);
 
@@ -253,66 +524,6 @@ $$(document).on('click', '#tab-booking', function (e) {
     $$('#org-content').html(list);
   });
 });
-
-
-var refreshQueue = function(id){
-
-
-    $$('#serving-content').html('<div class=" preloader"></div>');
-
-  //get currently serving tickets
- app.request.post('http://localhost:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
-   
-    var obj = JSON.parse(data);
-    if(Object.keys(obj.data)<0){
-      $$('#serving-content').html('<p>----Nothing follows----</p>');
-      return;
-    }
-
-    //set data on list
-    var items='';
-
-    //iterate data list
-    obj.data.forEach(function(val, index) {
-        //set data on list
-      items+=' <div class = "card"><div class = "card-content card-content-padding"><div class = "row">';
-      items+='<div class = "col-25"><b>N0'+val.id+'</b></div>';
-      items+='<div class = "col-75">'+val.description+'</div>'; 
-      items+='</div></div></div>';         
-    });
-    $$('#serving-content').html(items);
-  });
-
-
-    $$('#inline-content').html('<div class=" preloader"></div>');
-
-  //get next inline tickets
-  app.request.get('http://localhost:8084/v1/ticket/'+id, function (data) {
-   
-    var obj = JSON.parse(data);
-
-    if(Object.keys(obj.data)<0){
-
-      $$('#inline-content').html('<p>----Nothing follows----</p>');
-      return;
-    }
-
-    //set data on list
-    var items='';
-
-    //iterate data list
-    obj.data.forEach(function(val, index) {
-        //set data on list
-      items+=' <div class = "card"><div class = "card-content card-content-padding"><div class = "row">';
-      items+='<div class = "col-25"><b>N0'+val.id+'</b></div>';
-      items+='<div class = "col-75">'+val.created+'</div>'; 
-      items+='</div></div></div>';         
-    });
-
-
-    $$('#inline-content').html(items);
-  });
-};
 
 
 

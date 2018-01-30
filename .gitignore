@@ -1,14 +1,18 @@
 # Mac
 .DS_Store
 
+platforms/
+
 # iOS
+platforms/ios/
 platforms/ios/build/
 platforms/ios/www/
 platforms/ios/cordova/console.log
 *.xcuserdatad
 
 # android
-platforms/android/.gradle
+platforms/android/
+platforms/android/.idea/
 platforms/android/assets/www
 platforms/android/bin
 platforms/android/gen

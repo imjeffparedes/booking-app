@@ -8,6 +8,10 @@ routes = [
     url: './pages/about.html',
   },
   {
+    path: '/search-organization/',
+    url: './pages/search-organization.html',
+  },
+  {
     path: '/about/:id',
     url: './pages/about.html',
   },
@@ -20,6 +24,14 @@ routes = [
     url: './pages/queue.html',
   },
   {
+    path: '/line/:id',
+    url: './pages/line.html',
+  },
+  {
+    path: '/schedule/:id',
+    url: './pages/schedule.html',
+  },
+  {
     path: '/counter/',
     url: './pages/counter.html',
   },
@@ -28,11 +40,19 @@ routes = [
     url: './pages/counter.html',
   },
   {
+    path: '/organization/:id',
+    url: './pages/organization.html',
+  },
+  {
     path: '/settings/',
     url: './pages/settings.html',
   },
   {
     path: '/booking/',
+    url: './pages/booking.html',
+  },
+  {
+    path: '/booking/:id',
     url: './pages/booking.html',
   },
   // Page Loaders & Router
