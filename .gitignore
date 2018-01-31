@@ -1,7 +1,6 @@
 # Mac
 .DS_Store
 
-platforms/
 
 # iOS
 platforms/ios/
@@ -78,5 +77,6 @@ Thumbs.db
 #directory ##
 node_modules/
 build/
+platforms/
 
 

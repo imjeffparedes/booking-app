@@ -7,8 +7,8 @@ var $$ = Dom7;
 // Framework7 App main instance
 var app  = new Framework7({
   root: '#app', // App root element
-  id: 'io.framework7.testapp', // App bundle ID
-  name: 'About', // App name
+  id: 'io.redeeph.bookingapp', // App bundle ID
+  name: 'Booking App', // App name
   theme: 'auto', // Automatic theme detection
   // App root data
   data: function () {
@@ -41,6 +41,12 @@ var settingsView = app.views.create('#view-settings', {
 });
 
 
+document.addEventListener("deviceready", onDeviceReady, false);
+function onDeviceReady() {
+    StatusBar.show();
+}
+
+
 
 // Option 1. Using one 'page:init' handler for all pages
 $$(document).on('page:init', function (e) {
@@ -56,7 +62,7 @@ $$(document).on('page:init', function (e) {
     container.find('#lnk-search-specialist').attr({href: '/booking/'+params.id});
 
     //get organization info
-    app.request.get('http://192.168.2.150:8084/v1/organization/'+params.id, function (data) {
+    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/'+params.id, function (data) {
      
       var obj = JSON.parse(data);
 
@@ -76,12 +82,12 @@ $$(document).on('page:init', function (e) {
       if(obj.data.contact==null || obj.data.contact.length<=0)
         container.find('#organization-contact-content').hide();
 
-      if(obj.data.contact==null || obj.data.email.length<=0)
+      if(obj.data.email==null || obj.data.email.length<=0)
         container.find('#organization-email-content').hide();
-
-      container.find('#organization-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
-      container.find('#organization-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
-      
+      if(obj.data.description!=null && obj.data.description.length>=10){
+        container.find('#organization-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
+        container.find('#organization-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
+      }
       function toggleDesc() {
          var short = document.getElementById("organization-description-small");
           var long = document.getElementById("organization-description");
@@ -106,7 +112,7 @@ $$(document).on('page:init', function (e) {
   }
   else if(page.name == 'search-organization'){
 
-    app.request.get('http://192.168.2.150:8084/v1/organization/all', function (data) {
+    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/all', function (data) {
      
       var obj = JSON.parse(data);
       console.log(obj)
@@ -120,6 +126,10 @@ $$(document).on('page:init', function (e) {
 
       //iterate data list
       obj.data.forEach(function(val, index) {
+        if(val.image==null || val.image.length<=0)
+          val.image="../img/avatar_1.png";
+        if(val.description==null)
+          val.description='';
          list+='<li><a href="/organization/'+val.id+'" class="item-link item-content" id="link-org-'+val.id+'">';
               list+='<div class="item-media"><img src="'+val.image+'" width="44"/></div>';
               list+='<div class="item-inner">';
@@ -158,7 +168,7 @@ $$(document).on('page:init', function (e) {
 
   }
   else if(page.name == 'home'){
-    app.request.get('http://192.168.2.150:8084/v1/organization/6', function (data) {
+    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/6', function (data) {
      console.log(data)
       var obj = JSON.parse(data);
       if(Object.keys(obj.data)<0){
@@ -176,7 +186,7 @@ $$(document).on('page:init', function (e) {
     }); // end of ajax request
 
   }else if(page.name == 'about'){
-    app.request.get('http://192.168.2.150:8084/v1/specialist/'+params.id, function (data) {
+    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/specialist/'+params.id, function (data) {
      
       var obj = JSON.parse(data);
 
@@ -184,18 +194,24 @@ $$(document).on('page:init', function (e) {
       if(Object.keys(obj.data)<=0){
         return;
       }
+       if(obj.data.image==null || obj.data.image.length<=0)
+          obj.data.image="../img/avatar_1.png";
+        
       container.find('#specialist-name').html(obj.data.name);
       container.find('#specialist-image').attr({src:obj.data.image});
       container.find('#specialist-address').html(obj.data.address);
       container.find('#specialist-contact').html(obj.data.contact);
       container.find('#specialist-title').html(obj.data.name);
-
-      container.find('#specialist-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
-      container.find('#specialist-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
-      
+      if(obj.data.description!=null && obj.data.description.length>=10){
+        container.find('#specialist-description-small').html(obj.data.description.substring(0, 100)+'... ' +'<a href="#" id="desc-see-more" >see more</a>');
+        container.find('#specialist-description').html(obj.data.description+' <a href="#" id="desc-see-less">see less</a>');
+      }
       var specializations = "";
 
 
+      if(obj.data.specialization==null){
+        container.find('#specialization-card').hide();
+      }else
       obj.data.specialization.split(', ').forEach(function(val, index) {
         specializations+='<div class="chip"><div class="chip-label">'+val+'</div></div>';
       })
@@ -224,7 +240,7 @@ $$(document).on('page:init', function (e) {
 
     }); // end of ajax request
 
-     app.request.post('http://192.168.2.150:8084/v1/queue/', {specialistId:params.id}, function (data) { 
+     app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -247,7 +263,7 @@ $$(document).on('page:init', function (e) {
   }else if(page.name == 'booking'){
   
 
-    app.request.post('http://192.168.2.150:8084/v1/specialist/', {organizationId:params.id}, function (data) { 
+    app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/specialist/', {organizationId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -263,6 +279,11 @@ $$(document).on('page:init', function (e) {
 
       //iterate data list
       obj.data.forEach(function(val, index) {
+         if(val.image==null || val.image.length<=0)
+          val.image="../img/avatar_1.png";
+        if(val.description==null)
+          val.description='';
+
          list+='<li><a href="/about/'+val.id+'" class="item-link item-content" id="link-specialist-'+val.id+'">';
               list+='<div class="item-media"><img src="'+val.image+'" width="44"/></div>';
               list+='<div class="item-inner">';
@@ -299,7 +320,7 @@ $$(document).on('page:init', function (e) {
     });
   }
   else if(page.name == 'schedule'){
-    app.request.post('http://192.168.2.150:8084/v1/queue/', {specialistId:params.id}, function (data) { 
+    app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -326,12 +347,16 @@ $$(document).on('page:init', function (e) {
   }
   else if(page.name == 'line'){
 
+      container.find('#page-title').html(localStorage.specialistName);
+      container.find('#specialist-name').html(localStorage.specialistName);
+      container.find('#specialist-queue').html(localStorage.specialistQueueName);
+
       container.find('#btn-book-ticket').on('click', function () {
         app.dialog.prompt('What is your full name?', function (name) {
           app.dialog.prompt('What is your mobile number ' + name + '?', function (mobile) {
 
             app.dialog.preloader();
-            app.request.post('http://192.168.2.150:8084/v1/ticket/create', {
+            app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/create', {
                             queue_id:params.id,
                             name:name,
                             mobile:mobile,
@@ -357,7 +382,7 @@ $$(document).on('page:init', function (e) {
         container.find('#serving-content').html('<div class=" preloader"></div>');
 
         //get currently serving tickets
-       app.request.post('http://192.168.2.150:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
+       app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
          
           var obj = JSON.parse(data);
           console.log(obj)
@@ -385,13 +410,13 @@ $$(document).on('page:init', function (e) {
       container.find('#inline-content').html('<div class=" preloader"></div>');
 
       //get next inline tickets
-      app.request.post('http://192.168.2.150:8084/v1/ticket/'+id, {status:'PENDING'}, function (data) {
+      app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/'+id, {status:'PENDING'}, function (data) {
        
         var obj = JSON.parse(data);
 
         if(Object.keys(obj.data)<0){
 
-          container.find('#inline-content').html('<p>--- Nothing in here ---</p>');
+            $$('#inline-content').html('<p class="color-gray">--- Nothing in here ---</p>');
           return;
         }
 
@@ -428,7 +453,7 @@ var ticket_option = app.actions.create({
       onClick: function () {
          app.dialog.confirm('Hold this ticket?', function () {
            
-            app.request.get('http://192.168.2.150:8084/v1/ticket/hold/1', function (data) {
+            app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/hold/1', function (data) {
               console.log(data);
 
               var obj = JSON.parse(data);
@@ -444,7 +469,7 @@ var ticket_option = app.actions.create({
       text: 'Cancel',
       onClick: function () {
          app.dialog.confirm('Cancel this ticket?', function () {
-            app.request.get('http://192.168.2.150:8084/v1/ticket/cancel/1', function (data) {
+            app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/cancel/1', function (data) {
               console.log(data);
               if(obj>=1)
                app.dialog.alert('Ticket Canceled!');
@@ -488,7 +513,7 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 
 $$(document).on('click', '#tab-booking', function (e) {
 
-  app.request.post('http://192.168.2.150:8084/v1/queue/', {organizationId:6}, function (data) {
+  app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/', {organizationId:6}, function (data) {
    
     var obj = JSON.parse(data);
 
@@ -504,6 +529,12 @@ $$(document).on('click', '#tab-booking', function (e) {
 
     //iterate data list
     obj.data.forEach(function(val, index) {
+
+        if(val.image==null || val.image.length<=0)
+          val.image="../img/avatar_1.png";
+        if(val.description==null)
+          val.description='';
+
        list+='<li><a href="/about/'+val.id+'" class="item-link item-content" id="link-specialist-'+val.id+'">';
             list+='<div class="item-media"><img src="'+val.image+'" width="44"/></div>';
             list+='<div class="item-inner">';
