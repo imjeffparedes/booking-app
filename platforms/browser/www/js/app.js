@@ -29,12 +29,18 @@ var app  = new Framework7({
   routes: routes,
 });
 
+var uuid = "312b4fea3047a885";
+
+if (typeof device !== 'undefined') {
+    // the variable is defined
+    uuid = device.uuid
+}
 // Init/Create views
 var homeView = app.views.create('#view-home', {
   url: '/'
 });
 var catalogView = app.views.create('#view-booking', {
-  url: '/booking/'
+  url: '/search-organization/'
 });
 var settingsView = app.views.create('#view-settings', {
   url: '/settings/'
@@ -168,6 +174,11 @@ $$(document).on('page:init', function (e) {
 
   }
   else if(page.name == 'home'){
+    container.find('#lnk-search').on('click',function(){
+      console.log('clicked')
+      app.tab.show('#view-booking',false);
+    })
+
     app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/6', function (data) {
      console.log(data)
       var obj = JSON.parse(data);
@@ -255,7 +266,7 @@ $$(document).on('page:init', function (e) {
 
       //iterate data list
       obj.data.forEach(function(val, index) {
-        list+='<li><a href="/line/'+val.id+'" id="#schedule-'+val.id+'">'+val.name+'</a></li>';
+        list+='<li><a id="schedule-'+val.id+'" href="/line/'+val.id+'" id="#schedule-'+val.id+'">'+val.name+'</a></li>';
       });
       container.find('#schedule-content').html(list);
     }); //end of ajax request
@@ -337,7 +348,7 @@ $$(document).on('page:init', function (e) {
       obj.data.forEach(function(val, index) {
         list+='<li><a href="#" id="#schedule-'+val.id+'">'+val.name+'</a></li>';
            // Prompt
-        
+
 
       });
       container.find('#schedule-content').html(list);
@@ -347,72 +358,73 @@ $$(document).on('page:init', function (e) {
   }
   else if(page.name == 'line'){
 
-      container.find('#page-title').html(localStorage.specialistName);
-      container.find('#specialist-name').html(localStorage.specialistName);
+
+    container.find('#page-title').html(localStorage.specialistName);
+    container.find('#specialist-name').html(localStorage.specialistName);
+
+    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/'+params.id, function (data) { 
+      var obj = JSON.parse(data);
+      console.log(obj)
+      if(Object.keys(obj.data)<=0){
+        container.find('#schedule-content').html('<p class="text-align-center">No schedule found</p>');
+        return;
+      }
       container.find('#specialist-queue').html(localStorage.specialistQueueName);
+    }); //end of ajax request
+    
 
       container.find('#btn-book-ticket').on('click', function () {
-        app.dialog.prompt('What is your full name?', function (name) {
-          app.dialog.prompt('What is your mobile number ' + name + '?', function (mobile) {
 
-            app.dialog.preloader();
-            app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/create', {
-                            queue_id:params.id,
-                            name:name,
-                            mobile:mobile,
-                            metadata:[]
-                          }
-              ,function (data) {
-             
+         app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/myticket/', {
+                                    queue_id:params.id,
+                                    uuid:uuid
+                                  }
+            ,function (data) {
+              console.log(data);
+
               var obj = JSON.parse(data);
+              if(obj.data){
+                app.dialog.alert('You already have ticket '+obj.data.name+', your ticket number is N0' + obj.data.id+'<br>We will notify you when you are next in line.','Ops');
+                      
+              }else{
+                app.dialog.prompt('What is your full name?','Fill-up form', function (name) {
+                  app.dialog.prompt('What is your mobile number ' + name + '?','Fill-up form', function (mobile) {
 
-              app.dialog.alert('Thanks '+name+', your ticket number is N0' + obj.ticketId+'<br>Will text you when you are next in line.');
-              refreshQueue(params.id);
-               app.dialog.close();
-            
+                    app.dialog.preloader();
+                    app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/create', {
+                                    queue_id:params.id,
+                                    name:name,
+                                    mobile:mobile,
+                                    uuid:uuid,
+                                    metadata:[]
+                                  }
+                      ,function (data) {
+                     
+                      var obj = JSON.parse(data);
+
+                      app.dialog.alert('Thanks '+name+', your ticket number is N0' + obj.ticketId+'<br>We will notify you when you are next in line.','Complete');
+                      refreshQueue(params.id);
+                       app.dialog.close();
+                    
+                    });
+
+                  });
+                });
+
+              }
             });
 
-          });
-        });
+        
       });
 
     var refreshQueue = function(id){
 
 
-        container.find('#serving-content').html('<div class=" preloader"></div>');
-
-        //get currently serving tickets
-       app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/'+id, {status:'SERVING'},function (data) {
-         
-          var obj = JSON.parse(data);
-          console.log(obj)
-          if(Object.keys(obj.data)<=0){
-            $$('#serving-content').html('<p class="color-gray">--- Nothing in here ---</p>');
-            return;
-          }
-
-          //set data on list
-          var items='';
-
-          //iterate data list
-          obj.data.forEach(function(val, index) {
-              //set data on list
-            items+=' <div class = "card"><div class = "card-content"><div class = "row">';
-            items+='<div class = "col-33"><b>N0'+val.id+'</b></div>';
-            items+='<div class = "col-33">'+val.name+'</div>'; 
-            items+='<div class = "col-33">'+val.description+'</div>'; 
-            items+='</div></div></div>';         
-          });
-          $$('#serving-content').html(items);
-        });
-
-
-      container.find('#inline-content').html('<div class=" preloader"></div>');
-
       //get next inline tickets
       app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/'+id, {status:'PENDING'}, function (data) {
        
         var obj = JSON.parse(data);
+        console.log(obj)
 
         if(Object.keys(obj.data)<0){
 
@@ -420,21 +432,49 @@ $$(document).on('page:init', function (e) {
           return;
         }
 
+        container.find('#noInLine').html(obj.data.length);
         //set data on list
         var items='';
+        var yourNo = 0;
 
         //iterate data list
         obj.data.forEach(function(val, index) {
             //set data on list
-          items+=' <div class = "card"><div class = "card-content"><div class = "row">';
-          items+='<div class = "col-33"><b>N0'+val.id+'</b></div>';
-            items+='<div class = "col-33">'+val.name+'</div>'; 
-          items+='<div class = "col-33">'+val.created+'</div>'; 
-          items+='</div></div></div>';         
+          if(val.uuid!=null && val.uuid == uuid){
+            yourNo = index+1;
+            items+='<div class = "card">';
+                items+='<div class = "card-content card-content-padding text-align-center">';
+                if(yourNo ==1)
+                  items+='<h2 style="font-weight: 900;">You\'re 1st!</h2>';
+                else if(yourNo ==2)
+                  items+='<h2 style="font-weight: 900;">You\'re 2nd!</h2>';
+                else if(yourNo ==3)
+                  items+='<h2 style="font-weight: 900;">You\'re 3rd!</h2>';
+                else
+                  items+='<h2 style="font-weight: 900;">You\'re '+yourNo+'th</h2>';
+
+                   items+='<h3 style="font-weight: 300;">Ticket No: <b>N0'+val.id+'</b></h3>';
+                  items+='<p style="font-weight: 300;">We will notify you when you are next in line.</p>';
+                items+='</div>';
+            items+='</div>';
+            
+          }    
         });
 
+        if(items == ''){
+          items+='<div class = "card">';
+                items+='<div class = "card-content card-content-padding text-align-center">';
+                  items+='<p style="font-weight: 300;">You are not in this line.</p>';
+                items+='</div>';
+            items+='</div>';
+        }
 
-        container.find('#inline-content').html(items);
+
+
+        container.find('#myticket-content').html(items);
+
+
+
       });
     };
 

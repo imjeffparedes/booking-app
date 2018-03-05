@@ -10,10 +10,10 @@
     "cordova-plugin-console": {
       "PACKAGE_NAME": "com.redeeph.booking"
     },
-    "cordova-plugin-statusbar": {
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.redeeph.booking"
     },
-    "cordova-plugin-whitelist": {
+    "cordova-plugin-device": {
       "PACKAGE_NAME": "com.redeeph.booking"
     }
   },

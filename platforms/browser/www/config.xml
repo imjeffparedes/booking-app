@@ -21,4 +21,5 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <access origin="*" />
+    <preference name="StatusBarOverlaysWebView" value="false" />
 </widget>

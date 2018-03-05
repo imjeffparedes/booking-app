@@ -18,7 +18,15 @@
   "cordova-plugin-statusbar": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-statusbar@~1.0.1"
+      "id": "git+https://github.com/apache/cordova-plugin-statusbar.git"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-device": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-device"
     },
     "is_top_level": true,
     "variables": {}

@@ -44,6 +44,14 @@ routes = [
     url: './pages/organization.html',
   },
   {
+    path: '/privacy-policy/',
+    url: './pages/privacy-policy.html',
+  },
+  {
+    path: '/terms-and-condition/',
+    url: './pages/terms-and-condition.html',
+  },
+  {
     path: '/settings/',
     url: './pages/settings.html',
   },

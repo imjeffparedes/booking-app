@@ -12,25 +12,38 @@
   </div>
   <div class="page-content">
 
+    <div class = "block-title">Appointment</div> 
+    <div class="block">
+      <div class = "card">
+          <div class = "card-content card-content-padding">
+              <p><b id="specialist-name"></b></p>
+              <p>Schedule: <b id="specialist-queue"></b></p>
+          </div>
+      </div>
+    </div>
 
+    <div class="block">
+      <button class="button " id="btn-book-ticket">BOOK APPOINTMENT </button>
+    </div>
+
+    <div class = "block-title">Your Ticket</div> 
+    <div class="block">
+
+      <div class="text-align-center " id="myticket-content">
+        <div class=" preloader"></div>
+      </div>
+    </div>
+
+    <div class = "block-title">Queue</div> 
+    <div class="block">
     <div class = "card">
-        <div class = "card-content card-content-padding">
-            <p><b id="specialist-name"></b></p>
-            <p><b id="specialist-queue"></b></p>
+        <div class = "card-content card-content-padding text-align-center">
+          <h1 id="noInLine" class="color-green" style="font-weight: 900; ">...</h1>
+          <p>currently in line</p>
         </div>
     </div>
+    </div>
 
-    <div class="block"><button class="button " id="btn-book-ticket">BOOK APPOINTMENT </button></div>
-      <div class = "block-title">Currently Serving</div> 
-   
-    <div class="text-align-center " id="serving-content">
-      <div class=" preloader"></div>
-    </div>
-    
-    <div class = "block-title">Next in line</div>   
-    <div class="text-align-center " id="inline-content" style="margin-bottom: 100px;">
-      <div class=" preloader"></div>
-    </div>
 
 
 

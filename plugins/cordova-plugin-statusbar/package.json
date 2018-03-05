@@ -1,8 +1,31 @@
 {
-  "name": "cordova-plugin-statusbar",
-  "version": "2.4.1",
-  "description": "Cordova StatusBar Plugin",
-  "types": "./types/index.d.ts",
+  "_from": "git+https://github.com/apache/cordova-plugin-statusbar.git",
+  "_id": "cordova-plugin-statusbar@2.4.2-dev",
+  "_inBundle": false,
+  "_location": "/cordova-plugin-statusbar",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "git",
+    "raw": "git+https://github.com/apache/cordova-plugin-statusbar.git",
+    "rawSpec": "git+https://github.com/apache/cordova-plugin-statusbar.git",
+    "saveSpec": "git+https://github.com/apache/cordova-plugin-statusbar.git",
+    "fetchSpec": "https://github.com/apache/cordova-plugin-statusbar.git",
+    "gitCommittish": null
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/apache/cordova-plugin-statusbar.git#4c1507b525e4631ad04f3adada898845da3e3cbc",
+  "_spec": "git+https://github.com/apache/cordova-plugin-statusbar.git",
+  "_where": "/Users/pmgcti/Desktop/other/projects/Android/phonegap/booking",
+  "author": {
+    "name": "Apache Software Foundation"
+  },
+  "bugs": {
+    "url": "https://issues.apache.org/jira/browse/CB"
+  },
+  "bundleDependencies": false,
   "cordova": {
     "id": "cordova-plugin-statusbar",
     "platforms": [
@@ -13,26 +36,10 @@
       "windows"
     ]
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/apache/cordova-plugin-statusbar"
-  },
-  "bugs": {
-    "url": "https://issues.apache.org/jira/browse/CB"
-  },
-  "keywords": [
-    "cordova",
-    "statusbar",
-    "ecosystem:cordova",
-    "cordova-android",
-    "cordova-ios",
-    "cordova-wp7",
-    "cordova-wp8",
-    "cordova-windows"
-  ],
-  "scripts": {
-    "test": "npm run jshint",
-    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests"
+  "deprecated": false,
+  "description": "Cordova StatusBar Plugin",
+  "devDependencies": {
+    "jshint": "^2.6.0"
   },
   "engines": {
     "cordovaDependencies": {
@@ -44,9 +51,27 @@
       }
     }
   },
-  "author": "Apache Software Foundation",
+  "homepage": "https://github.com/apache/cordova-plugin-statusbar#readme",
+  "keywords": [
+    "cordova",
+    "statusbar",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios",
+    "cordova-wp7",
+    "cordova-wp8",
+    "cordova-windows"
+  ],
   "license": "Apache-2.0",
-  "devDependencies": {
-    "jshint": "^2.6.0"
-  }
+  "name": "cordova-plugin-statusbar",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/apache/cordova-plugin-statusbar.git"
+  },
+  "scripts": {
+    "jshint": "node node_modules/jshint/bin/jshint www && node node_modules/jshint/bin/jshint src && node node_modules/jshint/bin/jshint tests",
+    "test": "npm run jshint"
+  },
+  "types": "./types/index.d.ts",
+  "version": "2.4.2-dev"
 }
