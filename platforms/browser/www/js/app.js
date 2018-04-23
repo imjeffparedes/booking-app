@@ -68,7 +68,7 @@ $$(document).on('page:init', function (e) {
     container.find('#lnk-search-specialist').attr({href: '/booking/'+params.id});
 
     //get organization info
-    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/'+params.id, function (data) {
+    app.request.get('http://www.seedlly.com:8084/v1/organization/'+params.id, function (data) {
      
       var obj = JSON.parse(data);
 
@@ -118,7 +118,7 @@ $$(document).on('page:init', function (e) {
   }
   else if(page.name == 'search-organization'){
 
-    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/all', function (data) {
+    app.request.get('http://www.seedlly.com:8084/v1/organization/all', function (data) {
      
       var obj = JSON.parse(data);
       console.log(obj)
@@ -179,7 +179,7 @@ $$(document).on('page:init', function (e) {
       app.tab.show('#view-booking',false);
     })
 
-    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/6', function (data) {
+    app.request.get('http://www.seedlly.com:8084/v1/organization/6', function (data) {
      console.log(data)
       var obj = JSON.parse(data);
       if(Object.keys(obj.data)<0){
@@ -197,7 +197,7 @@ $$(document).on('page:init', function (e) {
     }); // end of ajax request
 
   }else if(page.name == 'about'){
-    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/specialist/'+params.id, function (data) {
+    app.request.get('http://www.seedlly.com:8084/v1/specialist/'+params.id, function (data) {
      
       var obj = JSON.parse(data);
 
@@ -251,7 +251,7 @@ $$(document).on('page:init', function (e) {
 
     }); // end of ajax request
 
-     app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
+     app.request.post('http://www.seedlly.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -274,7 +274,7 @@ $$(document).on('page:init', function (e) {
   }else if(page.name == 'booking'){
   
 
-    app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/specialist/', {organizationId:params.id}, function (data) { 
+    app.request.post('http://www.seedlly.com:8084/v1/specialist/', {organizationId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -331,7 +331,7 @@ $$(document).on('page:init', function (e) {
     });
   }
   else if(page.name == 'schedule'){
-    app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
+    app.request.post('http://www.seedlly.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -362,7 +362,7 @@ $$(document).on('page:init', function (e) {
     container.find('#page-title').html(localStorage.specialistName);
     container.find('#specialist-name').html(localStorage.specialistName);
 
-    app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/'+params.id, function (data) { 
+    app.request.get('http://www.seedlly.com:8084/v1/queue/'+params.id, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
       if(Object.keys(obj.data)<=0){
@@ -375,7 +375,7 @@ $$(document).on('page:init', function (e) {
 
       container.find('#btn-book-ticket').on('click', function () {
 
-         app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/myticket/', {
+         app.request.post('http://www.seedlly.com:8084/v1/myticket/', {
                                     queue_id:params.id,
                                     uuid:uuid
                                   }
@@ -391,7 +391,7 @@ $$(document).on('page:init', function (e) {
                   app.dialog.prompt('What is your mobile number ' + name + '?','Fill-up form', function (mobile) {
 
                     app.dialog.preloader();
-                    app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/create', {
+                    app.request.post('http://www.seedlly.com:8084/v1/ticket/create', {
                                     queue_id:params.id,
                                     name:name,
                                     mobile:mobile,
@@ -421,7 +421,7 @@ $$(document).on('page:init', function (e) {
 
 
       //get next inline tickets
-      app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/'+id, {status:'PENDING'}, function (data) {
+      app.request.post('http://www.seedlly.com:8084/v1/ticket/'+id, {status:'PENDING'}, function (data) {
        
         var obj = JSON.parse(data);
         console.log(obj)
@@ -493,7 +493,7 @@ var ticket_option = app.actions.create({
       onClick: function () {
          app.dialog.confirm('Hold this ticket?', function () {
            
-            app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/hold/1', function (data) {
+            app.request.get('http://www.seedlly.com:8084/v1/ticket/hold/1', function (data) {
               console.log(data);
 
               var obj = JSON.parse(data);
@@ -509,7 +509,7 @@ var ticket_option = app.actions.create({
       text: 'Cancel',
       onClick: function () {
          app.dialog.confirm('Cancel this ticket?', function () {
-            app.request.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/ticket/cancel/1', function (data) {
+            app.request.get('http://www.seedlly.com:8084/v1/ticket/cancel/1', function (data) {
               console.log(data);
               if(obj>=1)
                app.dialog.alert('Ticket Canceled!');
@@ -553,7 +553,7 @@ $$(document).on('page:init', '.page[data-name="about"]', function (e) {
 
 $$(document).on('click', '#tab-booking', function (e) {
 
-  app.request.post('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/queue/', {organizationId:6}, function (data) {
+  app.request.post('http://www.seedlly.com:8084/v1/queue/', {organizationId:6}, function (data) {
    
     var obj = JSON.parse(data);
 

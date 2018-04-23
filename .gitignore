@@ -78,5 +78,6 @@ Thumbs.db
 node_modules/
 build/
 platforms/
+plugins/
 
 

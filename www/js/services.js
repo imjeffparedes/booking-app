@@ -5,7 +5,7 @@ angular.module('jsconfuy.services', [])
   this.get = function() {
     var dfd = $q.defer();
 
-    $http.get('http://ec2-13-250-53-196.ap-southeast-1.compute.amazonaws.com:8084/v1/organization/all')
+    $http.get('http://www.seedlly.com:8084/v1/organization/all')
     .success(function(data) {
       dfd.resolve(data);
     })

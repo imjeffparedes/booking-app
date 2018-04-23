@@ -15,6 +15,12 @@
     },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "com.redeeph.booking"
+    },
+    "cordova-plugin-sim": {
+      "PACKAGE_NAME": "com.redeeph.booking"
+    },
+    "cordova-plugin-uniquedeviceid": {
+      "PACKAGE_NAME": "com.redeeph.booking"
     }
   },
   "dependent_plugins": {}
