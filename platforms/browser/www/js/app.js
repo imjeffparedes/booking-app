@@ -73,7 +73,7 @@ $$(document).on('page:init', function (e) {
       var obj = JSON.parse(data);
 
       console.log(obj)
-      if(obj.data == null || Object.keys(obj.data)<=0){
+      if(obj.data == null || Object.keys(obj.data)<0){
         return;
       }
       localStorage.orgName = obj.data.name;
@@ -122,7 +122,7 @@ $$(document).on('page:init', function (e) {
      
       var obj = JSON.parse(data);
       console.log(obj)
-      if(Object.keys(obj.data)<=0){
+      if(Object.keys(obj.data)<0){
         $$('#org-search-result-content').html('<p class="text-align-center">Search not found</p>');
         return;
       }
@@ -178,7 +178,7 @@ $$(document).on('page:init', function (e) {
       console.log('clicked')
       app.tab.show('#view-booking',false);
     })
-
+/*
     app.request.get('http://www.seedlly.com:8084/v1/organization/6', function (data) {
      console.log(data)
       var obj = JSON.parse(data);
@@ -195,6 +195,7 @@ $$(document).on('page:init', function (e) {
       container.find('#org-email').html(obj.data.email);
 
     }); // end of ajax request
+    */
 
   }else if(page.name == 'about'){
     app.request.get('http://www.seedlly.com:8084/v1/specialist/'+params.id, function (data) {
@@ -202,7 +203,7 @@ $$(document).on('page:init', function (e) {
       var obj = JSON.parse(data);
 
       console.log(obj)
-      if(Object.keys(obj.data)<=0){
+      if(Object.keys(obj.data)<0){
         return;
       }
        if(obj.data.image==null || obj.data.image.length<=0)
@@ -254,7 +255,7 @@ $$(document).on('page:init', function (e) {
      app.request.post('http://www.seedlly.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
-      if(Object.keys(obj.data)<=0){
+      if(Object.keys(obj.data)<0){
         container.find('#schedule-content').html('<p class="text-align-center">No schedule found</p>');
         return;
       }
@@ -277,7 +278,7 @@ $$(document).on('page:init', function (e) {
     app.request.post('http://www.seedlly.com:8084/v1/specialist/', {organizationId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
-      if(Object.keys(obj.data)<=0){
+      if(Object.keys(obj.data)<0){
 
         container.find('#specialist-content').html('<p class="text-align-center">No specialist found</p>');
         return;
@@ -334,7 +335,7 @@ $$(document).on('page:init', function (e) {
     app.request.post('http://www.seedlly.com:8084/v1/queue/', {specialistId:params.id}, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
-      if(Object.keys(obj.data)<=0){
+      if(Object.keys(obj.data)<0){
         container.find('#schedule-content').html('<p class="text-align-center">No schedule found</p>');
         return;
       }
@@ -365,7 +366,7 @@ $$(document).on('page:init', function (e) {
     app.request.get('http://www.seedlly.com:8084/v1/queue/'+params.id, function (data) { 
       var obj = JSON.parse(data);
       console.log(obj)
-      if(Object.keys(obj.data)<=0){
+      if(Object.keys(obj.data)<0){
         container.find('#schedule-content').html('<p class="text-align-center">No schedule found</p>');
         return;
       }
@@ -454,6 +455,10 @@ $$(document).on('page:init', function (e) {
                   items+='<h2 style="font-weight: 900;">You\'re '+yourNo+'th</h2>';
 
                    items+='<h3 style="font-weight: 300;">Ticket No: <b>N0'+val.id+'</b></h3>';
+
+                if(yourNo <=2)
+                  items+='<p style="font-weight: 300;">You are next in line.</p>';
+                else
                   items+='<p style="font-weight: 300;">We will notify you when you are next in line.</p>';
                 items+='</div>';
             items+='</div>';
@@ -464,7 +469,7 @@ $$(document).on('page:init', function (e) {
         if(items == ''){
           items+='<div class = "card">';
                 items+='<div class = "card-content card-content-padding text-align-center">';
-                  items+='<p style="font-weight: 300;">You are not in this line.</p>';
+                  items+='<p style="font-weight: 300;">You do not have ticket.</p>';
                 items+='</div>';
             items+='</div>';
         }
@@ -558,7 +563,7 @@ $$(document).on('click', '#tab-booking', function (e) {
     var obj = JSON.parse(data);
 
   console.log(obj)
-    if(Object.keys(obj.data)<=0){
+    if(Object.keys(obj.data)<0){
 
       $$('#org-content').html('<p class="text-align-center">No specialist found</p>');
       return;
